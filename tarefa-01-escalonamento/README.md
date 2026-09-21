@@ -40,6 +40,12 @@ quantum:2
 aging:1
 ```
 
+## Convenção da escala de prioridades
+
+A escala é **positiva com menor número = maior prioridade**, seguindo a convenção do
+Unix/Linux (`nice`). No exemplo acima, P3 (prioridade 1) é o mais prioritário e
+P4 (prioridade 4) o menos. Vale para todos os algoritmos com prioridade.
+
 ## Formato de saída
 
 Para **cada** algoritmo, em stdout:
