@@ -4,6 +4,8 @@ Simulador dos principais algoritmos de escalonamento de processador, com **inter
 web animada** (bônus previsto no enunciado) e **CLI compatível com stdin/stdout**
 (exigência literal do enunciado).
 
+> Divisão do trabalho entre os 3 integrantes e grafo de dependências das tasks: [`DIVISAO-DO-TRABALHO.md`](DIVISAO-DO-TRABALHO.md)
+>
 > Enunciado original: [`docs/Tarefa 01 - Escalonamento de Processos.pdf`](docs/)
 
 ## Algoritmos exigidos
