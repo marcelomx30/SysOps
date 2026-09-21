@@ -84,7 +84,29 @@ Havendo empate na escolha do processo que ocupará o processador, aplicar **nest
 
 ## Como rodar
 
-_A ser preenchido conforme a implementação avança._
+```bash
+npm install     # instala as dependências
+npm test        # roda a suíte de testes
+npm run dev     # sobe a interface web em http://localhost:3000
+npm run build   # build de produção
+```
+
+## Estado da implementação
+
+| Parte | Issue | Status |
+|---|---|---|
+| Setup do projeto | #1 | ✅ |
+| Tipos do contrato | #2 | ✅ |
+| Laço de simulação e desempate | #4 | ✅ |
+| Parser de entrada e config | #3 | ✅ |
+| FCFS | #5 | ✅ |
+| SJF | #6 | ✅ |
+| SRTF | #7 | ✅ |
+| Métricas | #12 | ✅ |
+| Prioridade (com e sem preempção) | #8, #9 | ⬜ frente B |
+| Round-Robin (com e sem aging) | #10, #11 | ⬜ frente C |
+| CLI stdin/stdout | #13 | ⬜ frente C |
+| Interface web | #14, #15 | ⬜ frente B |
 
 ## Entregáveis
 
