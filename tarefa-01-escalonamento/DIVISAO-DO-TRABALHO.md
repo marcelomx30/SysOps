@@ -6,12 +6,12 @@ diferente dos sete algoritmos, mais uma fatia periférica.
 
 ## Quem leva o quê
 
-| | Eixo no core | Algoritmos | Periferia |
-|---|---|---|---|
-| 🔵 **Pessoa A** | Ordem de chegada e duração — não-preemptivo vs. preemptivo por tempo | FCFS (#5), SJF (#6), SRTF (#7) | Parser de entrada e config (#3) |
-| 🟠 **Pessoa B** | Prioridade e o problema do *starvation* | Prioridade sem (#8) e com preempção (#9) | Interface web (#14, #15) |
-| 🟢 **Pessoa C** | Fatiamento de tempo — quantum e envelhecimento | Round-Robin (#10), RR com aging (#11) | Métricas (#12), CLI (#13), deploy (#17) |
-| 🟣 **Mob** | Contrato comum | — | Setup (#1), tipos (#2), laço + desempate (#4), documento final (#16) |
+| | Quem | Eixo no core | Algoritmos | Periferia |
+|---|---|---|---|---|
+| 🔵 **Pessoa A** | [@marcelomx30](https://github.com/marcelomx30) | Ordem de chegada e duração — não-preemptivo vs. preemptivo por tempo | FCFS (#5), SJF (#6), SRTF (#7) | Parser de entrada e config (#3) |
+| 🟠 **Pessoa B** | [@Lu1z-Gust4v0](https://github.com/Lu1z-Gust4v0) | Prioridade e o problema do *starvation* | Prioridade sem (#8) e com preempção (#9) | Interface web (#14, #15) |
+| 🟢 **Pessoa C** | [@en20](https://github.com/en20) | Fatiamento de tempo — quantum e envelhecimento | Round-Robin (#10), RR com aging (#11) | Métricas (#12), CLI (#13), deploy (#17) |
+| 🟣 **Mob** | os três | Contrato comum | — | Setup (#1), tipos (#2), laço + desempate (#4), documento final (#16) |
 
 O encadeamento dos eixos conta uma história na apresentação: A mostra que decidir só por
 tempo pode ser injusto → B mostra que prioridade resolve isso mas cria *starvation* →
@@ -48,8 +48,12 @@ C mostra que quantum + envelhecimento resolvem o *starvation*.
 
 ## Ordem de execução
 
-### Fase 0 — mob, bloqueia todo mundo
-`#1` setup → `#2` tipos → `#4` laço e regra de desempate.
+### Fase 0 — mob, bloqueia todo mundo ✅ CONCLUÍDA
+`#1` setup → `#2` tipos → `#4` laço e regra de desempate. Mergeada na `main` pelo PR #18.
+
+O contrato está em `src/engine/tipos.ts` (tipos) e `src/engine/politica.ts` (interface
+`PoliticaEscalonamento`). **As frentes B e C partem daí** — basta implementar a interface
+e registrar a política em `politicasDisponiveis()` (`src/engine/index.ts`).
 
 Os três juntos, na mesma sessão. É aqui que se define o **contrato** — os tipos de `#2`
 e a assinatura da política de escalonamento de `#4`. Depois disso as três frentes não
