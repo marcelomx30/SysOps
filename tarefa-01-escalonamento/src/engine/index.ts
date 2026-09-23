@@ -1,21 +1,25 @@
-/** Ponto de entrada público do motor, consumido pelo CLI e pela interface web. */
-export { lerConfig, lerProcessos } from './parser';
-export { simular } from './simulador';
-export type { Sorteio } from './simulador';
-export type { PoliticaEscalonamento } from './politica';
-export * from './tipos';
+/** Public entry point of the engine, consumed by the CLI and the web interface. */
+export { parseConfiguration, parseProcesses } from './parser';
+export { simulate } from './simulator';
+export type { RandomPicker } from './simulator';
+export type { SchedulingPolicy } from './scheduling_policy';
+export * from './types';
 
-import { PoliticaFcfs } from './policies/fcfs';
-import { PoliticaSjf } from './policies/sjf';
-import { PoliticaSrtf } from './policies/srtf';
-import type { PoliticaEscalonamento } from './politica';
+import { FirstComeFirstServePolicy } from './policies/first_come_first_serve';
+import { ShortestJobFirstPolicy } from './policies/shortest_job_first';
+import { ShortestRemainingTimeFirstPolicy } from './policies/shortest_remaining_time_first';
+import type { SchedulingPolicy } from './scheduling_policy';
 
 /**
- * Políticas disponíveis, na ordem em que o enunciado as lista.
+ * Available policies, in the order the assignment lists them.
  *
- * As frentes B e C registram aqui os quatro algoritmos restantes (prioridade
- * com e sem preempção, e os dois round-robin) conforme forem implementados.
+ * Workstreams B and C register the four remaining algorithms here (priority
+ * with and without preemption, and the two round-robins) as they are implemented.
  */
-export function politicasDisponiveis(): PoliticaEscalonamento[] {
-  return [new PoliticaFcfs(), new PoliticaSjf(), new PoliticaSrtf()];
+export function availablePolicies(): SchedulingPolicy[] {
+  return [
+    new FirstComeFirstServePolicy(),
+    new ShortestJobFirstPolicy(),
+    new ShortestRemainingTimeFirstPolicy(),
+  ];
 }
