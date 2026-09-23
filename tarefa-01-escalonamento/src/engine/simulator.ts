@@ -125,8 +125,8 @@ export function simulate(
   while (processes.some((process) => process.status !== 'finished')) {
     if (instant > INSTANT_LIMIT) {
       throw new Error(
-        `Simulação de "${policy.name}" excedeu ${INSTANT_LIMIT} instantes — ` +
-          `provável laço infinito na política.`,
+        `Simulation of "${policy.name}" exceeded ${INSTANT_LIMIT} instants — ` +
+          `likely an infinite loop in the policy.`,
       );
     }
 
@@ -158,10 +158,12 @@ export function simulate(
       configuration,
     };
 
+    // Kept in a variable because it decides two things: who occupies the CPU
+    // and whether the current quantum slice continues or restarts.
+    const keptCpu = keepsCpu(policy, running, quantumUsed, configuration);
+
     const chosen: Process =
-      running !== null && keepsCpu(policy, running, quantumUsed, configuration)
-        ? running
-        : selectProcess(policy, context, pickRandom);
+      running !== null && keptCpu ? running : selectProcess(policy, context, pickRandom);
 
     // A context switch only counts when the CPU occupant actually changes.
     if (lastOccupant !== null && lastOccupant.id !== chosen.id) {
@@ -171,7 +173,12 @@ export function simulate(
       running.status = 'ready';
     }
 
-    quantumUsed = running !== null && running.id === chosen.id ? quantumUsed : 0;
+    // The slice restarts whenever the CPU is reevaluated, even if the winner is
+    // the same process — a common case when it is the only ready one. Without
+    // this the counter would never return to zero and the CPU would end up
+    // being reevaluated every second, firing `onQuantumEnd` outside the
+    // quantum boundaries.
+    quantumUsed = keptCpu ? quantumUsed : 0;
 
     if (chosen.firstExecutionTime === null) chosen.firstExecutionTime = instant;
     chosen.status = 'running';
