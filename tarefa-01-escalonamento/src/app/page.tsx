@@ -1,23 +1,23 @@
 /**
- * Placeholder da interface web.
+ * Placeholder for the web interface.
  *
- * A interface completa é a issue #14 (frente B). Esta página existe para que o
- * build do Next funcione enquanto isso, e já demonstra o motor rodando.
+ * The complete interface is issue #14 (workstream B). This page exists so that
+ * the Next build works in the meantime, and it already shows the engine running.
  */
-import { politicasDisponiveis, simular, type Config, type EntradaProcesso } from '@/engine';
+import { availablePolicies, simulate, type Configuration, type ProcessInput } from '@/engine';
 
-const EXEMPLO: EntradaProcesso[] = [
-  { criacao: 0, duracao: 5, prioridade: 2 },
-  { criacao: 0, duracao: 2, prioridade: 3 },
-  { criacao: 1, duracao: 4, prioridade: 1 },
-  { criacao: 3, duracao: 3, prioridade: 4 },
+const EXAMPLE: ProcessInput[] = [
+  { creationTime: 0, duration: 5, priority: 2 },
+  { creationTime: 0, duration: 2, priority: 3 },
+  { creationTime: 1, duration: 4, priority: 1 },
+  { creationTime: 3, duration: 3, priority: 4 },
 ];
 
-const CONFIG: Config = { quantum: 2, aging: 1 };
+const CONFIGURATION: Configuration = { quantum: 2, aging: 1 };
 
 export default function Home() {
-  const resultados = politicasDisponiveis().map((politica) =>
-    simular(EXEMPLO, CONFIG, politica),
+  const results = availablePolicies().map((policy) =>
+    simulate(EXAMPLE, CONFIGURATION, policy),
   );
 
   return (
@@ -27,13 +27,13 @@ export default function Home() {
         Interface completa em construção (issue #14). Abaixo, o motor rodando sobre o
         exemplo do enunciado.
       </p>
-      {resultados.map((resultado) => (
-        <section key={resultado.algoritmo}>
-          <h2>{resultado.algoritmo}</h2>
+      {results.map((result) => (
+        <section key={result.algorithm}>
+          <h2>{result.algorithm}</h2>
           <ul>
-            <li>Tempo médio de vida (tt): {resultado.turnaroundMedio.toFixed(2)}</li>
-            <li>Tempo médio de espera (tw): {resultado.esperaMedia.toFixed(2)}</li>
-            <li>Trocas de contexto: {resultado.trocasDeContexto}</li>
+            <li>Tempo médio de vida (tt): {result.averageTurnaroundTime.toFixed(2)}</li>
+            <li>Tempo médio de espera (tw): {result.averageWaitingTime.toFixed(2)}</li>
+            <li>Trocas de contexto: {result.contextSwitches}</li>
           </ul>
         </section>
       ))}

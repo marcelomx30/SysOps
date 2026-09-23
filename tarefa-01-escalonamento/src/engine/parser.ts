@@ -1,102 +1,102 @@
-import type { Config, EntradaProcesso } from './tipos';
+import type { Configuration, ProcessInput } from './types';
 
-const CONFIG_PADRAO: Config = { quantum: 2, aging: 1 };
+const DEFAULT_CONFIGURATION: Configuration = { quantum: 2, aging: 1 };
 
-function inteiroOuErro(texto: string, campo: string, linha: string): number {
-  // Number() aceitaria "1.5" e " " silenciosamente; o enunciado exige inteiros.
-  if (!/^-?\d+$/.test(texto)) {
+function parseIntegerOrThrow(text: string, field: string, line: string): number {
+  // Number() would silently accept "1.5" and " "; the assignment requires integers.
+  if (!/^-?\d+$/.test(text)) {
     throw new Error(
-      `Valor inválido para ${campo}: "${texto}" na linha "${linha}". ` +
+      `Valor inválido para ${field}: "${text}" na linha "${line}". ` +
         `Esperado: um número inteiro.`,
     );
   }
-  return Number.parseInt(texto, 10);
+  return Number.parseInt(text, 10);
 }
 
 /**
- * Lê os processos da entrada padrão.
+ * Reads the processes from standard input.
  *
- * Cada linha traz três inteiros — instante de criação, duração e prioridade —
- * separados por um ou mais espaços em branco. Linhas vazias são ignoradas. A
- * listagem não precisa vir ordenada por data de criação; a ordem original é
- * preservada porque é ela que numera os processos (P1, P2, ...) no diagrama.
+ * Each line has three integers — creation instant, duration and priority —
+ * separated by one or more whitespace characters. Empty lines are ignored. The
+ * listing does not need to be sorted by creation time; the original order is
+ * preserved because it is what numbers the processes (P1, P2, ...) in the diagram.
  *
  * @example
- * lerProcessos('0 5 2\n1 4 1');
- * // [{ criacao: 0, duracao: 5, prioridade: 2 }, { criacao: 1, duracao: 4, prioridade: 1 }]
+ * parseProcesses('0 5 2\n1 4 1');
+ * // [{ creationTime: 0, duration: 5, priority: 2 }, { creationTime: 1, duration: 4, priority: 1 }]
  */
-export function lerProcessos(texto: string): EntradaProcesso[] {
-  const linhas = texto
+export function parseProcesses(text: string): ProcessInput[] {
+  const lines = text
     .split('\n')
-    .map((linha) => linha.trim())
-    .filter((linha) => linha.length > 0);
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
 
-  return linhas.map((linha) => {
-    const campos = linha.split(/\s+/);
-    if (campos.length !== 3) {
+  return lines.map((line) => {
+    const fields = line.split(/\s+/);
+    if (fields.length !== 3) {
       throw new Error(
-        `Linha com ${campos.length} campo(s): "${linha}". ` +
+        `Linha com ${fields.length} campo(s): "${line}". ` +
           `Esperado: 3 inteiros (criação, duração, prioridade) separados por espaços.`,
       );
     }
 
-    const criacao = inteiroOuErro(campos[0], 'instante de criação', linha);
-    const duracao = inteiroOuErro(campos[1], 'duração', linha);
-    const prioridade = inteiroOuErro(campos[2], 'prioridade', linha);
+    const creationTime = parseIntegerOrThrow(fields[0], 'instante de criação', line);
+    const duration = parseIntegerOrThrow(fields[1], 'duração', line);
+    const priority = parseIntegerOrThrow(fields[2], 'prioridade', line);
 
-    if (criacao < 0) {
+    if (creationTime < 0) {
       throw new Error(
-        `Instante de criação negativo: ${criacao} na linha "${linha}". Esperado: >= 0.`,
+        `Instante de criação negativo: ${creationTime} na linha "${line}". Esperado: >= 0.`,
       );
     }
-    if (duracao <= 0) {
+    if (duration <= 0) {
       throw new Error(
-        `Duração inválida: ${duracao} na linha "${linha}". Esperado: inteiro > 0.`,
+        `Duração inválida: ${duration} na linha "${line}". Esperado: inteiro > 0.`,
       );
     }
-    if (prioridade <= 0) {
+    if (priority <= 0) {
       throw new Error(
-        `Prioridade inválida: ${prioridade} na linha "${linha}". ` +
+        `Prioridade inválida: ${priority} na linha "${line}". ` +
           `Esperado: inteiro > 0 (escala de prioridades positiva).`,
       );
     }
 
-    return { criacao, duracao, prioridade };
+    return { creationTime, duration, priority };
   });
 }
 
 /**
- * Lê o arquivo de configuração em texto plano, no formato `chave:valor`.
+ * Reads the plain text configuration file, in the `key:value` format.
  *
- * Chaves ausentes caem no padrão (quantum 2, aging 1), que é o exemplo do
- * enunciado. Chaves desconhecidas são ignoradas.
+ * Missing keys fall back to the default (quantum 2, aging 1), which is the
+ * assignment's example. Unknown keys are ignored.
  *
  * @example
- * lerConfig('quantum:4\naging:2'); // { quantum: 4, aging: 2 }
+ * parseConfiguration('quantum:4\naging:2'); // { quantum: 4, aging: 2 }
  */
-export function lerConfig(texto: string): Config {
-  const valores = new Map<string, number>();
+export function parseConfiguration(text: string): Configuration {
+  const values = new Map<string, number>();
 
-  for (const linha of texto.split('\n')) {
-    const limpa = linha.trim();
-    if (limpa.length === 0 || limpa.startsWith('#')) continue;
+  for (const line of text.split('\n')) {
+    const cleanLine = line.trim();
+    if (cleanLine.length === 0 || cleanLine.startsWith('#')) continue;
 
-    const separador = limpa.indexOf(':');
-    if (separador === -1) {
+    const separatorIndex = cleanLine.indexOf(':');
+    if (separatorIndex === -1) {
       throw new Error(
-        `Linha de configuração sem ":": "${limpa}". Esperado: formato chave:valor.`,
+        `Linha de configuração sem ":": "${cleanLine}". Esperado: formato chave:valor.`,
       );
     }
 
-    const chave = limpa.slice(0, separador).trim().toLowerCase();
-    const bruto = limpa.slice(separador + 1).trim();
-    if (chave !== 'quantum' && chave !== 'aging') continue;
+    const key = cleanLine.slice(0, separatorIndex).trim().toLowerCase();
+    const rawValue = cleanLine.slice(separatorIndex + 1).trim();
+    if (key !== 'quantum' && key !== 'aging') continue;
 
-    valores.set(chave, inteiroOuErro(bruto, chave, limpa));
+    values.set(key, parseIntegerOrThrow(rawValue, key, cleanLine));
   }
 
-  const quantum = valores.get('quantum') ?? CONFIG_PADRAO.quantum;
-  const aging = valores.get('aging') ?? CONFIG_PADRAO.aging;
+  const quantum = values.get('quantum') ?? DEFAULT_CONFIGURATION.quantum;
+  const aging = values.get('aging') ?? DEFAULT_CONFIGURATION.aging;
 
   if (quantum <= 0) {
     throw new Error(`Quantum inválido: ${quantum}. Esperado: inteiro > 0.`);
