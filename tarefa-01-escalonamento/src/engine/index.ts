@@ -7,6 +7,7 @@ export * from './types';
 
 import { FirstComeFirstServePolicy } from './policies/first_come_first_serve';
 import { ShortestJobFirstPolicy } from './policies/shortest_job_first';
+import { RoundRobinPriorityPolicy } from './policies/round_robin_priority';
 import { RoundRobinPolicy } from './policies/round_robin';
 import { ShortestRemainingTimeFirstPolicy } from './policies/shortest_remaining_time_first';
 import type { SchedulingPolicy } from './scheduling_policy';
@@ -27,5 +28,6 @@ export function availablePolicies(): SchedulingPolicy[] {
     new ShortestJobFirstPolicy(),
     new ShortestRemainingTimeFirstPolicy(),
     new RoundRobinPolicy(),
+    new RoundRobinPriorityPolicy(),
   ];
 }
