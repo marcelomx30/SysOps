@@ -1,0 +1,145 @@
+/* Scroll-driven intro. The tall section provides the scroll distance; the stage stays pinned. */
+.hero {
+  position: relative;
+  height: 500vh;
+  height: 500svh;
+  background: #000;
+  color: #fff;
+}
+
+.hero-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: #000 url('/hero/poster-horizontal.jpg') center / cover no-repeat;
+}
+
+@media (orientation: portrait) {
+  .hero-stage { background-image: url('/hero/poster-vertical.jpg'); }
+}
+
+.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+/* Darkens the lower-left, where the text sits, so it stays legible over the animation. */
+.hero-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to top right, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 70%);
+}
+
+.hero-skip {
+  position: absolute;
+  top: 3rem;
+  right: 1rem;
+  color: #fff;
+  font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  text-decoration: none;
+}
+.hero-skip:focus-visible, .hero-cta:focus-visible, .hero-progress button:focus-visible {
+  outline: 2px solid #6f9bff;
+  outline-offset: 2px;
+}
+
+/* Story-style progress bar; each segment jumps to its act. */
+.hero-progress {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.hero-progress li { flex: 1; }
+.hero-progress button {
+  display: block;
+  width: 100%;
+  height: 1.75rem;
+  padding: 0;
+  min-height: 0;
+  border: 0;
+  background: none;
+  position: relative;
+}
+.hero-progress button::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 0.25rem;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.25);
+  transition: background 0.3s;
+}
+.hero-progress button.filled::after { background: #6f9bff; }
+
+.hero-copy {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: grid;
+  max-width: 30rem;
+  padding: 1.25rem 1.25rem calc(3rem + env(safe-area-inset-bottom));
+}
+.hero-act {
+  grid-area: 1 / 1;
+  align-self: end;
+  opacity: 0;
+  transform: translateY(0.75rem);
+  pointer-events: none;
+  transition: opacity 0.35s, transform 0.35s;
+}
+.hero-act.active { opacity: 1; transform: none; pointer-events: auto; }
+.hero-act p { margin: 0; line-height: 1.5; }
+.hero-kicker { color: #d9a21b; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.hero-act-title { font-size: 1.9rem; font-weight: 650; margin: 0.25rem 0 0.5rem !important; }
+
+.hero-cta {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.7rem 1.1rem;
+  border-radius: 0.5rem;
+  background: #6f9bff;
+  color: #0b1020;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.hero-hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
+  margin: 0;
+  transform: translateX(-50%);
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+  transition: opacity 0.3s;
+  animation: hero-bob 1.8s ease-in-out infinite;
+}
+.hero-hint.hidden { opacity: 0; }
+@keyframes hero-bob { 50% { transform: translate(-50%, 0.3rem); } }
+
+@media (min-width: 40rem) {
+  .hero-copy { padding: 2rem 3rem 4rem; }
+  .hero-act-title { font-size: 2.6rem; }
+}
+
+/* Reduced motion: no pinning and no scrubbing. Poster background, all acts listed. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero { height: auto; }
+  .hero-stage { position: relative; height: auto; min-height: 100svh; display: flex; align-items: flex-end; }
+  .hero-video, .hero-hint, .hero-progress { display: none; }
+  .hero-copy { position: relative; display: block; }
+  .hero-act { opacity: 1; transform: none; pointer-events: auto; margin-top: 1.5rem; }
+}

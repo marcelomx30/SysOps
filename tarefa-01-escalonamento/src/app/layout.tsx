@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import './globals.css';
+import './hero.css';
 
 export const metadata: Metadata = {
   title: 'Simulador de Escalonamento de Processos',
