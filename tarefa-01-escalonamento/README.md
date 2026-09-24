@@ -60,10 +60,10 @@ Para **cada** algoritmo, em stdout:
 Diagrama no formato:
 
 ```
-tempo     P1    P2     P3   P4
- 0- 1     ##    --
- 1- 2     ##    --     --
- 2- 3     --    ##     --
+tempo  P1 P2 P3 P4
+ 0- 1  -- ##
+ 1- 2  -- ## --
+ 2- 3  ##    --
 ```
 
 `##` = processo ocupando o processador · `--` = processo pronto, aguardando · vazio = ainda não criado ou já encerrado.
@@ -91,6 +91,15 @@ npm run dev     # sobe a interface web em http://localhost:3000
 npm run build   # build de produção
 ```
 
+### CLI (stdin → stdout)
+
+```bash
+npm run cli -- --config exemplos/config.txt < exemplos/entrada-exemplo.txt
+```
+
+Sem `--config`, valem os padrões `quantum:2` e `aging:1`. O CLI imprime, para cada
+algoritmo registrado no motor, as quatro informações exigidas pelo enunciado.
+
 ## Estado da implementação
 
 | Parte | Issue | Status |
@@ -103,10 +112,12 @@ npm run build   # build de produção
 | SJF | #6 | ✅ |
 | SRTF | #7 | ✅ |
 | Métricas | #12 | ✅ |
+| Round-Robin com quantum | #10 | ✅ |
+| Round-Robin com prioridade e envelhecimento | #11 | ✅ |
+| CLI stdin/stdout | #13 | ✅ |
 | Prioridade (com e sem preempção) | #8, #9 | ⬜ frente B |
-| Round-Robin (com e sem aging) | #10, #11 | ⬜ frente C |
-| CLI stdin/stdout | #13 | ⬜ frente C |
 | Interface web | #14, #15 | ⬜ frente B |
+| Deploy na Vercel | #17 | ⬜ depende de #14 |
 
 ## Entregáveis
 
