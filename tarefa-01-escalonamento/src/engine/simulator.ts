@@ -115,12 +115,7 @@ export function simulate(
 
   let instant = 0;
   let running: Process | null = null;
-  // Last process to occupy the CPU, even if already finished. Unlike
-  // `running`, which is cleared on completion: without this, the switch that
-  // follows a finished process would not be counted.
-  let lastOccupant: Process | null = null;
   let quantumUsed = 0;
-  let contextSwitches = 0;
 
   while (processes.some((process) => process.status !== 'finished')) {
     if (instant > INSTANT_LIMIT) {
@@ -165,10 +160,6 @@ export function simulate(
     const chosen: Process =
       running !== null && keptCpu ? running : selectProcess(policy, context, pickRandom);
 
-    // A context switch only counts when the CPU occupant actually changes.
-    if (lastOccupant !== null && lastOccupant.id !== chosen.id) {
-      contextSwitches += 1;
-    }
     if (running !== null && running.id !== chosen.id) {
       running.status = 'ready';
     }
@@ -191,7 +182,6 @@ export function simulate(
 
     chosen.remainingTime -= 1;
     quantumUsed += 1;
-    lastOccupant = chosen;
     instant += 1;
 
     if (policy.usesQuantum && quantumUsed >= configuration.quantum) {
@@ -208,5 +198,5 @@ export function simulate(
     }
   }
 
-  return calculateMetrics(policy.name, processes, timeline, contextSwitches);
+  return calculateMetrics(policy.name, processes, timeline);
 }
