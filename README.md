@@ -4,9 +4,9 @@ Repositório das atividades práticas da disciplina de Sistemas Operacionais.
 
 ## Atividades
 
-| Tarefa | Tema | Status |
-|--------|------|--------|
-| [Tarefa 01](tarefa-01-escalonamento/) | Escalonamento de Processos | 🚧 Em desenvolvimento |
+| Tarefa | Tema | Status | Demo |
+|--------|------|--------|------|
+| [Tarefa 01](tarefa-01-escalonamento/) | Escalonamento de Processos | 🚧 Em desenvolvimento | [sysops-escalonamento.vercel.app](https://sysops-escalonamento.vercel.app) |
 
 ## Estrutura
 

@@ -4,6 +4,8 @@ Simulador dos principais algoritmos de escalonamento de processador, com **inter
 web animada** (bônus previsto no enunciado) e **CLI compatível com stdin/stdout**
 (exigência literal do enunciado).
 
+🔗 **Interface web:** https://sysops-escalonamento.vercel.app
+
 > Divisão do trabalho entre os 3 integrantes e grafo de dependências das tasks: [`DIVISAO-DO-TRABALHO.md`](DIVISAO-DO-TRABALHO.md)
 >
 > Enunciado original: [`docs/Tarefa 01 - Escalonamento de Processos.pdf`](docs/)
@@ -60,10 +62,10 @@ Para **cada** algoritmo, em stdout:
 Diagrama no formato:
 
 ```
-tempo     P1    P2     P3   P4
- 0- 1     ##    --
- 1- 2     ##    --     --
- 2- 3     --    ##     --
+tempo  P1 P2 P3 P4
+ 0- 1  -- ##
+ 1- 2  -- ## --
+ 2- 3  ##    --
 ```
 
 `##` = processo ocupando o processador · `--` = processo pronto, aguardando · vazio = ainda não criado ou já encerrado.
@@ -91,6 +93,15 @@ npm run dev     # sobe a interface web em http://localhost:3000
 npm run build   # build de produção
 ```
 
+### CLI (stdin → stdout)
+
+```bash
+npm run cli -- --config exemplos/config.txt < exemplos/entrada-exemplo.txt
+```
+
+Sem `--config`, valem os padrões `quantum:2` e `aging:1`. O CLI imprime, para cada
+algoritmo registrado no motor, as quatro informações exigidas pelo enunciado.
+
 ## Estado da implementação
 
 | Parte | Issue | Status |
@@ -103,10 +114,25 @@ npm run build   # build de produção
 | SJF | #6 | ✅ |
 | SRTF | #7 | ✅ |
 | Métricas | #12 | ✅ |
+| Round-Robin com quantum | #10 | ✅ |
+| Round-Robin com prioridade e envelhecimento | #11 | ✅ |
+| CLI stdin/stdout | #13 | ✅ |
 | Prioridade (com e sem preempção) | #8, #9 | ⬜ frente B |
-| Round-Robin (com e sem aging) | #10, #11 | ⬜ frente C |
-| CLI stdin/stdout | #13 | ⬜ frente C |
 | Interface web | #14, #15 | ⬜ frente B |
+| Deploy na Vercel | #17 | 🟡 URL no ar; falta o deploy automático |
+
+## Deploy
+
+A interface está publicada em https://sysops-escalonamento.vercel.app (projeto
+`enzzos-projects/sysops-escalonamento`, Root Directory `tarefa-01-escalonamento/`).
+
+O **deploy automático a cada push na `main` ainda não está ligado**: conectar o
+repositório exige permissão de admin em `marcelomx30/SysOps` para instalar o app da
+Vercel. Até lá a publicação é manual, de dentro desta pasta:
+
+```bash
+npx vercel --prod
+```
 
 ## Entregáveis
 
