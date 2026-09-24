@@ -31,6 +31,8 @@
 
 * { box-sizing: border-box; }
 
+html { scroll-behavior: smooth; }
+
 body {
   margin: 0;
   background: var(--bg);
@@ -137,7 +139,10 @@ th, td { padding: 0.35rem 0.4rem; text-align: left; }
 .data caption { text-align: left; color: var(--muted); font-size: 0.9rem; padding: 0.75rem 0 0.25rem; }
 .comparison tr.selected { background: color-mix(in srgb, var(--accent) 14%, transparent); }
 
-.scroll-x { overflow-x: auto; }
+/* position: relative makes the scroller the containing block of the absolutely
+   positioned .visually-hidden spans inside it; otherwise they escape its
+   overflow and widen the whole page on phones. */
+.scroll-x { overflow-x: auto; position: relative; }
 
 /* Results */
 .results.stale { opacity: 0.55; }
