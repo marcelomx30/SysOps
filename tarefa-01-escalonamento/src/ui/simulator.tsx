@@ -57,7 +57,7 @@ export function Simulator() {
   const result = lastValid?.results[selected];
 
   return (
-    <main className="page">
+    <main id="simulador" className="page">
       <header>
         <h1>Simulador de Escalonamento de Processos</h1>
         <p className="hint">

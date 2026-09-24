@@ -87,7 +87,7 @@ describe('evaluate', () => {
 
   it('names the offending process when a field is left blank', () => {
     const outcome = evaluate({ ...VALID, rows: [row(1, '0', '', '2')] });
-    expect(outcome).toEqual({ ok: false, error: expect.stringMatching(/^P1: /) });
+    expect(outcome).toEqual({ ok: false, error: expect.stringMatching(/^P1: preencha/i) });
   });
 
   it('rejects a blank row instead of silently skipping it', () => {

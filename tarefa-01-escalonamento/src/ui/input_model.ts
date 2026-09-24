@@ -93,11 +93,11 @@ export function evaluate(values: FormValues): Evaluation {
 /** Parses one row, prefixing errors with the process the user has to fix. */
 function parseRow(row: ProcessRow, index: number): ProcessInput[] {
   const label = `P${index + 1}`;
-  const parsed = parseWithLabel(rowToLine(row), label);
-  if (parsed.length === 0) {
+  const fields = [row.creationTime, row.duration, row.priority];
+  if (fields.some((field) => field.trim() === '')) {
     throw new Error(`${label}: preencha instante de criação, duração e prioridade.`);
   }
-  return parsed;
+  return parseWithLabel(rowToLine(row), label);
 }
 
 function parseWithLabel(line: string, label: string): ProcessInput[] {
