@@ -78,6 +78,15 @@ Havendo empate na escolha do processo que ocupará o processador, aplicar **nest
 2. o processo com **menor tempo restante** de processamento;
 3. escolha **aleatória**.
 
+Processos criados no mesmo instante **não** são tratados como empate no FCFS nem nos
+dois Round-Robin: eles entram na fila **na ordem da entrada**, como no diagrama de tempo
+do enunciado (P1 e P2 criados em t=0, P1 executa primeiro). A regra acima vale para os
+demais critérios — duração no SJF, tempo restante no SRTF e prioridade nos algoritmos
+por prioridade.
+
+No Round-Robin com prioridade e envelhecimento, o envelhecimento é aplicado ao fim de
+cada fatia de tempo: quando o quantum se esgota ou, antes disso, quando o processo termina.
+
 ## Stack
 
 - **Motor de simulação**: TypeScript puro, sem dependências de runtime — compartilhado entre CLI e web

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { FirstComeFirstServePolicy } from '../policies/first_come_first_serve';
+import { NonPreemptivePriorityPolicy } from '../policies/non_preemptive_priority';
 import { ShortestJobFirstPolicy } from '../policies/shortest_job_first';
 import { ShortestRemainingTimeFirstPolicy } from '../policies/shortest_remaining_time_first';
 import { simulate } from '../simulator';
@@ -27,19 +28,31 @@ describe('FCFS', () => {
   const result = simulate(EXAMPLE, CONFIGURATION, new FirstComeFirstServePolicy(), fixedRandomPicker);
 
   it('runs in order of arrival, without preemption', () => {
-    // P1 and P2 arrive together at t=0; the shortest remaining tie-break gives the CPU to P2.
-    expect(cpuOccupancy(result)).toEqual([2, 2, 1, 1, 1, 1, 1, 3, 3, 3, 3, 4, 4, 4]);
+    // P1 and P2 arrive together at t=0 and are served in input order, as in
+    // the assignment's time diagram.
+    expect(cpuOccupancy(result)).toEqual([1, 1, 1, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4]);
   });
 
   it('produces the hand-calculated metrics for the assignment example', () => {
-    expect(result.averageTurnaroundTime).toBe(7.5);
-    expect(result.averageWaitingTime).toBe(4);
+    // Completions: P1=5, P2=7, P3=11, P4=14.
+    // tt: 5, 7, 10, 11 -> 33/4. tw = tt - duration: 0, 5, 6, 8 -> 19/4.
+    expect(result.averageTurnaroundTime).toBe(8.25);
+    expect(result.averageWaitingTime).toBe(4.75);
     expect(result.contextSwitches).toBe(3);
   });
 
+  it('serves processes created at the same instant in input order, not by remaining time', () => {
+    const input: ProcessInput[] = [
+      { creationTime: 0, duration: 5, priority: 1 },
+      { creationTime: 0, duration: 2, priority: 1 },
+    ];
+    const simultaneous = simulate(input, CONFIGURATION, new FirstComeFirstServePolicy(), () => 1);
+    expect(simultaneous.timeline[0].running).toBe(1);
+  });
+
   it('does not interrupt a running process when another arrives', () => {
-    // P3 arrives at t=1, during P2's execution, and does not take the CPU.
-    expect(result.timeline[1].running).toBe(2);
+    // P3 arrives at t=1, during P1's execution, and does not take the CPU.
+    expect(result.timeline[1].running).toBe(1);
   });
 });
 
@@ -109,17 +122,17 @@ describe('tie-breaking rule', () => {
       { creationTime: 0, duration: 5, priority: 1 },
       { creationTime: 0, duration: 2, priority: 1 },
     ];
-    // They tie on arrival; the one with the shortest remaining (P2) wins, not the lowest id.
-    const tieResult = simulate(input, CONFIGURATION, new FirstComeFirstServePolicy(), fixedRandomPicker);
+    // Equal priority ties them; the one with the shortest remaining (P2) wins, not the lowest id.
+    const tieResult = simulate(input, CONFIGURATION, new NonPreemptivePriorityPolicy(), fixedRandomPicker);
     expect(tieResult.timeline[0].running).toBe(2);
   });
 
-  it('falls back to the random pick only when arrival and remaining time tie', () => {
+  it('falls back to the random pick only when the criterion and remaining time tie', () => {
     const input: ProcessInput[] = [
       { creationTime: 0, duration: 3, priority: 1 },
       { creationTime: 0, duration: 3, priority: 1 },
     ];
-    const tieResult = simulate(input, CONFIGURATION, new FirstComeFirstServePolicy(), () => 1);
+    const tieResult = simulate(input, CONFIGURATION, new ShortestJobFirstPolicy(), () => 1);
     expect(tieResult.timeline[0].running).toBe(2);
   });
 });
@@ -132,8 +145,8 @@ describe('timeline', () => {
       new FirstComeFirstServePolicy(),
       fixedRandomPicker,
     );
-    // At t=0, P2 runs and P1 waits; P3 and P4 have not been created yet.
-    expect(timelineResult.timeline[0]).toEqual({ instant: 0, running: 2, ready: [1] });
+    // At t=0, P1 runs and P2 waits; P3 and P4 have not been created yet.
+    expect(timelineResult.timeline[0]).toEqual({ instant: 0, running: 1, ready: [2] });
   });
 
   it('covers one second per slice, from instant 0 until the last completion', () => {

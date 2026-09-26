@@ -137,7 +137,8 @@ export function simulate(
     );
 
     if (ready.length === 0) {
-      // Idle CPU: no process created yet. Advances without recording a switch.
+      // Idle CPU: no process created yet, or a gap between the last completion
+      // and the next creation. Advances without recording a switch.
       timeline.push({ instant, running: null, ready: [] });
       running = null;
       quantumUsed = 0;
@@ -167,7 +168,7 @@ export function simulate(
     // The slice restarts whenever the CPU is reevaluated, even if the winner is
     // the same process — a common case when it is the only ready one. Without
     // this the counter would never return to zero and the CPU would end up
-    // being reevaluated every second, firing `onQuantumEnd` outside the
+    // being reevaluated every second, firing `onSliceEnd` outside the
     // quantum boundaries.
     quantumUsed = keptCpu ? quantumUsed : 0;
 
@@ -184,8 +185,10 @@ export function simulate(
     quantumUsed += 1;
     instant += 1;
 
-    if (policy.usesQuantum && quantumUsed >= configuration.quantum) {
-      policy.onQuantumEnd?.(context, chosen);
+    // A slice ends when the quantum is used up or, earlier, when the process
+    // finishes: both are the points where the CPU is reevaluated.
+    if (policy.usesQuantum && (quantumUsed >= configuration.quantum || chosen.remainingTime === 0)) {
+      policy.onSliceEnd?.(context, chosen);
     }
 
     if (chosen.remainingTime === 0) {

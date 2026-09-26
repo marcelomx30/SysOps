@@ -13,7 +13,9 @@ import { CircularQueue } from './circular_queue';
  * The assignment imposes two specific restrictions on this algorithm:
  *
  * 1. aging happens once per quantum, not per second — hence the adjustment
- *    lives in `onQuantumEnd`, the only hook the loop calls at slice boundaries;
+ *    lives in `onSliceEnd`, the only hook the loop calls at slice boundaries.
+ *    A slice cut short because the process finished also counts: the CPU is
+ *    reevaluated there just like at the end of a full quantum;
  * 2. there is no preemption by priority — hence `preemptive = false`: a process
  *    that already holds the CPU completes its slice even if someone reaches a
  *    higher priority in the middle of it.
@@ -42,16 +44,16 @@ export class RoundRobinPriorityPolicy implements SchedulingPolicy {
   }
 
   /**
-   * Tied are the processes of equal dynamic priority that the queue cannot
-   * separate either — that is, created at the same instant and still
-   * unexecuted. There, and only there, the assignment's tie-breaking rule applies.
+   * Dynamic priority followed by queue position is a total order, so no two
+   * distinct processes are tied: among equal priorities the queue decides, and
+   * the queue orders processes created at the same instant by input order.
    */
   areTied(first: Process, second: Process): boolean {
-    return first.dynamicPriority === second.dynamicPriority && this.queue.sameBatch(first, second);
+    return first === second;
   }
 
   /**
-   * Quantum boundary: ages whoever waited and resets whoever was served.
+   * Slice boundary: ages whoever waited and resets whoever was served.
    *
    * Aging means subtracting `aging`, because the scale is inverted (lower
    * number = higher priority): waiting moves the process towards the top. There
@@ -63,7 +65,7 @@ export class RoundRobinPriorityPolicy implements SchedulingPolicy {
    * — the dynamic priority is not consulted while the process holds the
    * processor — and this is the only hook the policy interface offers.
    */
-  onQuantumEnd(context: SelectionContext, chosen: Process): void {
+  onSliceEnd(context: SelectionContext, chosen: Process): void {
     for (const process of context.ready) {
       if (process.id !== chosen.id) {
         process.dynamicPriority -= context.configuration.aging;
@@ -71,6 +73,6 @@ export class RoundRobinPriorityPolicy implements SchedulingPolicy {
     }
 
     chosen.dynamicPriority = chosen.staticPriority;
-    this.queue.markQuantumEnd(chosen);
+    this.queue.markSliceEnd(chosen);
   }
 }
