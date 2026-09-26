@@ -117,7 +117,8 @@ algoritmo registrado no motor, as quatro informações exigidas pelo enunciado.
 | Round-Robin com quantum | #10 | ✅ |
 | Round-Robin com prioridade e envelhecimento | #11 | ✅ |
 | CLI stdin/stdout | #13 | ✅ |
-| Prioridade (com e sem preempção) | #8, #9 | ⬜ frente B |
+| Prioridade sem preempção | #8 | ✅ |
+| Prioridade com preempção | #9 | ⬜ frente B |
 | Interface web | #14, #15 | ⬜ frente B |
 | Deploy na Vercel | #17 | 🟡 URL no ar; falta o deploy automático |
 
