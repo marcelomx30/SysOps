@@ -32,21 +32,20 @@ export class RoundRobinPolicy implements SchedulingPolicy {
   }
 
   /**
-   * Only processes created at the same instant and still unexecuted are tied —
-   * for everything else the queue already defines a total order.
+   * The queue defines a total order, so no two distinct processes are tied.
    *
    * This is what keeps the rotation alive: whoever has just used up its quantum
-   * sits alone at the end of the queue, never joins the tied group and is
-   * therefore never reached by the assignment's rule (i), "keep whoever already
-   * holds the processor", which would hand the CPU back to it indefinitely. For
-   * the ties that remain — simultaneous creation — the assignment's rule
-   * decides as usual.
+   * sits alone at the end of the queue and is therefore never reached by the
+   * assignment's rule (i), "keep whoever already holds the processor", which
+   * would hand the CPU back to it indefinitely. Processes created at the same
+   * instant are ordered by input order inside the queue, as in the
+   * assignment's time diagram.
    */
   areTied(first: Process, second: Process): boolean {
-    return this.queue.sameBatch(first, second);
+    return first === second;
   }
 
-  onQuantumEnd(_context: SelectionContext, chosen: Process): void {
-    this.queue.markQuantumEnd(chosen);
+  onSliceEnd(_context: SelectionContext, chosen: Process): void {
+    this.queue.markSliceEnd(chosen);
   }
 }

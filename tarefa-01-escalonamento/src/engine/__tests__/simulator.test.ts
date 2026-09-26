@@ -16,8 +16,8 @@ class ProbePolicy implements SchedulingPolicy {
   readonly preemptive = false;
   readonly usesQuantum = true;
 
-  /** Instants at which `onQuantumEnd` was called, in order. */
-  readonly quantumBoundaries: number[] = [];
+  /** Instants at which `onSliceEnd` was called, in order. */
+  readonly sliceBoundaries: number[] = [];
   /** Value of `quantumUsed` at every CPU reevaluation. */
   readonly sliceAtReevaluation: number[] = [];
 
@@ -30,21 +30,21 @@ class ProbePolicy implements SchedulingPolicy {
     return first.creationTime === second.creationTime;
   }
 
-  onQuantumEnd(context: SelectionContext): void {
-    this.quantumBoundaries.push(context.instant);
+  onSliceEnd(context: SelectionContext): void {
+    this.sliceBoundaries.push(context.instant);
   }
 }
 
 describe('quantum slice', () => {
-  it('announces the end of the quantum only at boundaries, even with a single ready process', () => {
+  it('announces the end of the slice only at boundaries, even with a single ready process', () => {
     const policy = new ProbePolicy();
     const input: ProcessInput[] = [{ creationTime: 0, duration: 5, priority: 1 }];
 
     simulate(input, CONFIGURATION, policy, fixedRandomPicker);
 
-    // With quantum 2, the boundaries are the end of t=1 and the end of t=3.
-    // The process finishes at t=4, inside a third slice that never completes.
-    expect(policy.quantumBoundaries).toEqual([1, 3]);
+    // With quantum 2, the quanta end at the end of t=1 and of t=3. The process
+    // finishes at t=4, which cuts the third slice short and ends it there.
+    expect(policy.sliceBoundaries).toEqual([1, 3, 4]);
   });
 
   it('restarts the slice when the same process wins the reevaluation', () => {
@@ -56,7 +56,7 @@ describe('quantum slice', () => {
 
     simulate(input, CONFIGURATION, policy, fixedRandomPicker);
 
-    expect(policy.quantumBoundaries).toEqual([1, 3, 5, 7]);
+    expect(policy.sliceBoundaries).toEqual([1, 3, 5, 7]);
     // One reevaluation at t=0 (idle CPU) and one at each boundary: never above
     // the quantum, and never one per second.
     expect(policy.sliceAtReevaluation).toEqual([0, 2, 2, 2]);
