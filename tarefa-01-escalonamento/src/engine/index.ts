@@ -7,6 +7,7 @@ export * from './types';
 
 import { FirstComeFirstServePolicy } from './policies/first_come_first_serve';
 import { NonPreemptivePriorityPolicy } from './policies/non_preemptive_priority';
+import { PreemptivePriorityPolicy } from './policies/preemptive_priority';
 import { ShortestJobFirstPolicy } from './policies/shortest_job_first';
 import { RoundRobinPriorityPolicy } from './policies/round_robin_priority';
 import { RoundRobinPolicy } from './policies/round_robin';
@@ -15,9 +16,6 @@ import type { SchedulingPolicy } from './scheduling_policy';
 
 /**
  * Available policies, in the order the assignment lists them.
- *
- * Workstream B registers priority with preemption here, right after priority
- * without preemption.
  *
  * The round-robin policies keep the ready queue as internal state, which is
  * why this function returns fresh instances on every call: one of its results
@@ -29,6 +27,7 @@ export function availablePolicies(): SchedulingPolicy[] {
     new ShortestJobFirstPolicy(),
     new ShortestRemainingTimeFirstPolicy(),
     new NonPreemptivePriorityPolicy(),
+    new PreemptivePriorityPolicy(),
     new RoundRobinPolicy(),
     new RoundRobinPriorityPolicy(),
   ];
