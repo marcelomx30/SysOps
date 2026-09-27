@@ -13,9 +13,10 @@ function average(values: readonly number[]): number {
 /**
  * Counts context switches by walking the timeline.
  *
- * A switch is every change of CPU occupant. Idle slices do not count: they
- * only occur before the first process is created, when there is no previous
- * context to save.
+ * A switch is every change of CPU occupant. Idle slices do not count and do not
+ * reset the previous occupant: before the first process is created there is no
+ * context to save, and across a gap between two processes the change from one
+ * to the other counts as a single switch.
  */
 function countContextSwitches(timeline: readonly TimeSlice[]): number {
   let switches = 0;

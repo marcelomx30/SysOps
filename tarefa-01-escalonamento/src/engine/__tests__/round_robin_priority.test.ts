@@ -95,6 +95,25 @@ describe('Round-Robin with priority and aging', () => {
     expect(cpuOccupancy(withAging).indexOf(2)).toBe(8);
   });
 
+  it('also ages the waiting processes when a slice ends early because its process finished', () => {
+    // P1 finishes at t=1, halfway through its quantum; P2 and P3 age there too.
+    // At t=3 P3 has aged 5 -> 4 -> 3 and ties with P2, just reset to 3, so the
+    // queue hands the CPU to P3. Aging only at full quanta would leave P3 at 4
+    // and give the CPU back to P2.
+    const input: ProcessInput[] = [
+      { creationTime: 0, duration: 1, priority: 1 },
+      { creationTime: 0, duration: 6, priority: 3 },
+      { creationTime: 0, duration: 6, priority: 5 },
+    ];
+    const earlyEnd = simulate(
+      input,
+      CONFIGURATION,
+      new RoundRobinPriorityPolicy(),
+      fixedRandomPicker,
+    );
+    expect(cpuOccupancy(earlyEnd).slice(0, 5)).toEqual([1, 2, 2, 3, 3]);
+  });
+
   it('ages whoever waited and restores the priority of whoever was served', () => {
     const policy = new RoundRobinPriorityPolicy();
     const served = buildProcess(1, 2);
@@ -102,7 +121,7 @@ describe('Round-Robin with priority and aging', () => {
     // Dynamic priority already lowered by a previous quantum.
     served.dynamicPriority = 0;
 
-    policy.onQuantumEnd(
+    policy.onSliceEnd(
       {
         ready: [served, waiting],
         running: served,

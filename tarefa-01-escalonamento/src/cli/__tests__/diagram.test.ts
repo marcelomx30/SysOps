@@ -24,17 +24,17 @@ describe('time diagram', () => {
     );
 
     // Blank on the left while the process has not been created (P3 at t=0, P4
-    // until t=2) and on the right once it has finished (P2 from t=2 on).
+    // until t=2) and on the right once it has finished (P1 from t=5 on).
     expect(formatDiagram(result.timeline, EXAMPLE.length)).toBe(
       [
         'tempo  P1 P2 P3 P4',
-        ' 0- 1  -- ##',
-        ' 1- 2  -- ## --',
-        ' 2- 3  ##    --',
-        ' 3- 4  ##    -- --',
-        ' 4- 5  ##    -- --',
-        ' 5- 6  ##    -- --',
-        ' 6- 7  ##    -- --',
+        ' 0- 1  ## --',
+        ' 1- 2  ## -- --',
+        ' 2- 3  ## -- --',
+        ' 3- 4  ## -- -- --',
+        ' 4- 5  ## -- -- --',
+        ' 5- 6     ## -- --',
+        ' 6- 7     ## -- --',
         ' 7- 8        ## --',
         ' 8- 9        ## --',
         ' 9-10        ## --',

@@ -49,10 +49,12 @@ export interface SchedulingPolicy {
   readonly preemptive: boolean;
 
   /**
-   * State adjustment at the end of each quantum. Only the aging algorithm
-   * uses it; the others inherit the empty behavior.
+   * State adjustment at the end of each time slice of a quantum policy: when
+   * the quantum is used up, or earlier if the process finishes inside it.
+   * `context` is the one of the slice's last second. Only the round-robin
+   * policies use it; the others inherit the empty behavior.
    */
-  onQuantumEnd?(context: SelectionContext, chosen: Process): void;
+  onSliceEnd?(context: SelectionContext, chosen: Process): void;
 
   /**
    * If `true`, the CPU is reevaluated every `quantum` seconds even if the

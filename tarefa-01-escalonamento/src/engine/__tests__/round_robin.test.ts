@@ -21,19 +21,27 @@ function cpuOccupancy(result: SimulationResult): (number | null)[] {
 describe('Round-Robin with quantum', () => {
   const result = simulate(EXAMPLE, CONFIGURATION, new RoundRobinPolicy(), fixedRandomPicker);
 
-  it('runs the assignment example with quantum:2', () => {
-    // P1 and P2 are created together and tie in the queue: the assignment's
-    // rule gives the CPU to the shortest remaining one (P2), which finishes
-    // inside the first quantum. From there the queue rotates every 2 seconds.
-    expect(cpuOccupancy(result)).toEqual([2, 2, 1, 1, 3, 3, 4, 4, 1, 1, 3, 3, 4, 1]);
+  it('reproduces the time diagram of the assignment with quantum:2', () => {
+    // P1 and P2 are created together and enter the queue in input order, so P1
+    // runs first — exactly the diagram on page 2 of the assignment.
+    expect(cpuOccupancy(result)).toEqual([1, 1, 2, 2, 3, 3, 1, 1, 4, 4, 3, 3, 1, 4]);
   });
 
   it('produces the hand-checked metrics for the assignment example', () => {
-    // Completions: P1=14, P2=2, P3=12, P4=13.
-    // tt: 14, 2, 11, 10 -> 37/4. tw = tt - duration: 9, 0, 7, 7 -> 23/4.
-    expect(result.averageTurnaroundTime).toBe(9.25);
-    expect(result.averageWaitingTime).toBe(5.75);
+    // Completions: P1=13, P2=4, P3=12, P4=14.
+    // tt: 13, 4, 11, 11 -> 39/4. tw = tt - duration: 8, 2, 7, 8 -> 25/4.
+    expect(result.averageTurnaroundTime).toBe(9.75);
+    expect(result.averageWaitingTime).toBe(6.25);
     expect(result.contextSwitches).toBe(7);
+  });
+
+  it('orders processes created at the same instant by input order, not remaining time', () => {
+    const input: ProcessInput[] = [
+      { creationTime: 0, duration: 5, priority: 1 },
+      { creationTime: 0, duration: 1, priority: 1 },
+    ];
+    const simultaneous = simulate(input, CONFIGURATION, new RoundRobinPolicy(), () => 1);
+    expect(cpuOccupancy(simultaneous)).toEqual([1, 1, 2, 1, 1, 1]);
   });
 
   it('gives the CPU back at the end of each quantum, in rotation', () => {

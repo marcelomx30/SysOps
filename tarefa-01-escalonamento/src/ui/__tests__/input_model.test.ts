@@ -71,8 +71,8 @@ describe('evaluate', () => {
   it('reproduces the FCFS numbers of the assignment example', () => {
     const outcome = evaluate(VALID);
     if (!outcome.ok) throw new Error(outcome.error);
-    expect(outcome.results[0].averageTurnaroundTime).toBeCloseTo(7.5);
-    expect(outcome.results[0].averageWaitingTime).toBeCloseTo(4);
+    expect(outcome.results[0].averageTurnaroundTime).toBeCloseTo(8.25);
+    expect(outcome.results[0].averageWaitingTime).toBeCloseTo(4.75);
   });
 
   it('refuses an empty process list', () => {

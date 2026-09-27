@@ -13,12 +13,18 @@ export class FirstComeFirstServePolicy implements SchedulingPolicy {
   readonly preemptive = false;
   readonly usesQuantum = false;
 
+  /**
+   * Processes created at the same instant are served in input order, as in the
+   * assignment's time diagram (P1 and P2 are both created at t=0 and P1 runs
+   * first). The order of arrival is then total and nobody is ever tied.
+   */
   sort(context: SelectionContext): readonly Process[] {
-    // A tie on arrival is resolved by the simulator's rule, not by the id.
-    return [...context.ready].sort((first, second) => first.creationTime - second.creationTime);
+    return [...context.ready].sort(
+      (first, second) => first.creationTime - second.creationTime || first.id - second.id,
+    );
   }
 
   areTied(first: Process, second: Process): boolean {
-    return first.creationTime === second.creationTime;
+    return first === second;
   }
 }

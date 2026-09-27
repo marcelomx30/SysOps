@@ -24,19 +24,19 @@ describe('per-process metrics', () => {
   );
 
   it('reproduces the hand-checked values for the assignment example', () => {
-    // FCFS: 2 2 1 1 1 1 1 3 3 3 3 4 4 4
-    // Completions: P1=7, P2=2, P3=11, P4=14.
+    // FCFS: 1 1 1 1 1 2 2 3 3 3 3 4 4 4
+    // Completions: P1=5, P2=7, P3=11, P4=14.
     expect(result.perProcess).toEqual([
-      { id: 1, turnaroundTime: 7, waitingTime: 2, responseTime: 2 },
-      { id: 2, turnaroundTime: 2, waitingTime: 0, responseTime: 0 },
+      { id: 1, turnaroundTime: 5, waitingTime: 0, responseTime: 0 },
+      { id: 2, turnaroundTime: 7, waitingTime: 5, responseTime: 5 },
       { id: 3, turnaroundTime: 10, waitingTime: 6, responseTime: 6 },
       { id: 4, turnaroundTime: 11, waitingTime: 8, responseTime: 8 },
     ]);
   });
 
   it('reports the averages required in the output', () => {
-    expect(result.averageTurnaroundTime).toBe(7.5); // 30/4
-    expect(result.averageWaitingTime).toBe(4); // 16/4
+    expect(result.averageTurnaroundTime).toBe(8.25); // 33/4
+    expect(result.averageWaitingTime).toBe(4.75); // 19/4
   });
 });
 

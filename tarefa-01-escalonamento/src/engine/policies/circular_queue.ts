@@ -14,13 +14,8 @@ import type { Process } from '../types';
  * simulations drops the stale queue on the first sync instead of mixing them.
  */
 export class CircularQueue {
-  /**
-   * `position` is the place in line; `batch` identifies processes that entered
-   * together and stays meaningful while they have not run. A process that has
-   * already given the CPU back has `batch: null` — it is alone in its position
-   * and never ties with anyone.
-   */
-  private readonly entries = new Map<Process, { position: number; batch: number | null }>();
+  /** Place in line of every queued process; the smaller, the closer to the CPU. */
+  private readonly positions = new Map<Process, number>();
   private nextPosition = 0;
   private awaitingRequeue: Process | null = null;
 
@@ -31,11 +26,16 @@ export class CircularQueue {
    *
    * 1. leave: whoever is no longer ready (finished, or processes left over
    *    from a previous simulation);
-   * 2. enter: the newly created ones, sorted by creation instant — not by the
-   *    order they show up here, because `sort()` is only called when the CPU is
-   *    reevaluated and more than one process may have been created between two
-   *    calls;
-   * 3. back of the line: whoever used up its quantum.
+   * 2. enter: the newly created ones, sorted by creation instant and then by
+   *    input order — not by the order they show up here, because `sort()` is
+   *    only called when the CPU is reevaluated and more than one process may
+   *    have been created between two calls;
+   * 3. back of the line: whoever used up its time slice.
+   *
+   * Input order as the second key is what the assignment's own time diagram
+   * does: P1 and P2 are both created at t=0 and P1 runs first. Processes created
+   * at the same instant are therefore never tied in the queue, and the
+   * assignment's tie-breaking rule is not needed to order them.
    *
    * Step 3 coming after step 2 is the convention the team adopted for #10's
    * acceptance criterion: a process created at the very instant another uses up
@@ -46,57 +46,45 @@ export class CircularQueue {
   sync(ready: readonly Process[]): void {
     const present = new Set(ready);
 
-    for (const process of this.entries.keys()) {
-      if (!present.has(process)) this.entries.delete(process);
+    for (const process of this.positions.keys()) {
+      if (!present.has(process)) this.positions.delete(process);
     }
 
     const newcomers = ready
-      .filter((process) => !this.entries.has(process))
-      .sort((first, second) => first.creationTime - second.creationTime);
+      .filter((process) => !this.positions.has(process))
+      .sort((first, second) => first.creationTime - second.creationTime || first.id - second.id);
     for (const process of newcomers) {
-      this.enqueue(process, process.creationTime);
+      this.enqueue(process);
     }
 
     if (this.awaitingRequeue !== null) {
       const preempted = this.awaitingRequeue;
       this.awaitingRequeue = null;
-      // If it finished within the quantum it already left in step 1 and does
+      // If it finished within the slice it already left in step 1 and does
       // not rejoin the queue.
-      if (present.has(preempted)) this.enqueue(preempted, null);
+      if (present.has(preempted)) this.enqueue(preempted);
     }
   }
 
   /**
-   * Marks that `process` used up its quantum and must go to the end of the queue.
+   * Marks that `process` ended its time slice and must go to the end of the queue.
    *
    * The repositioning is deliberately deferred to the next `sync()`: the loop
-   * calls `onQuantumEnd` at the end of the previous second, before admitting
+   * calls `onSliceEnd` at the end of the previous second, before admitting
    * the processes created in the following second. Deferring is what lets an
    * arrival join the queue ahead of the preempted process.
    */
-  markQuantumEnd(process: Process): void {
+  markSliceEnd(process: Process): void {
     this.awaitingRequeue = process;
   }
 
   /** Place in line; the smaller, the closer to the CPU. */
   position(process: Process): number {
-    return this.entries.get(process)?.position ?? Number.MAX_SAFE_INTEGER;
+    return this.positions.get(process) ?? Number.MAX_SAFE_INTEGER;
   }
 
-  /**
-   * Tells whether both processes entered the queue together and neither has
-   * held the CPU yet — the only case the queue cannot order on its own, where
-   * the assignment's tie-breaking rule has to decide.
-   */
-  sameBatch(first: Process, second: Process): boolean {
-    if (first === second) return true;
-    const firstBatch = this.entries.get(first)?.batch ?? null;
-    const secondBatch = this.entries.get(second)?.batch ?? null;
-    return firstBatch !== null && firstBatch === secondBatch;
-  }
-
-  private enqueue(process: Process, batch: number | null): void {
-    this.entries.set(process, { position: this.nextPosition, batch });
+  private enqueue(process: Process): void {
+    this.positions.set(process, this.nextPosition);
     this.nextPosition += 1;
   }
 }
