@@ -30,6 +30,8 @@ function elapse(milliseconds: number): void {
 
 beforeEach(() => {
   vi.useFakeTimers();
+  // The playback integration does not need a raster renderer in jsdom.
+  vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
   container = document.createElement('div');
   document.body.append(container);
@@ -40,6 +42,7 @@ afterEach(() => {
   act(() => root.unmount());
   container.remove();
   vi.useRealTimers();
+  vi.restoreAllMocks();
 });
 
 describe('playback calculations', () => {
@@ -62,6 +65,14 @@ describe('playback calculations', () => {
     expect(end.isPlaying).toBe(false);
     expect(startPlayback(end, 3).currentInstant).toBe(BEFORE_START);
     expect(startPlayback(resetPlayback(), 0).isPlaying).toBe(false);
+  });
+
+  it('rejects non-finite seek values instead of corrupting the playhead', () => {
+    for (const instant of [NaN, Infinity, -Infinity]) {
+      expect(() => seekPlayback(resetPlayback(), instant, 4))
+        .toThrow(`Received instant ${instant}; expected a finite number.`);
+    }
+    expect(seekPlayback(resetPlayback(), 1.8, 4).currentInstant).toBe(1);
   });
 
   it('rejects unsupported speeds with the received and expected values', () => {
@@ -167,4 +178,24 @@ describe('playback integration', () => {
     });
     expect(seek().value).toBe('-1');
   });
+});
+
+function changeInput(input: HTMLInputElement, value: string): void {
+  const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
+  act(() => {
+    setter.call(input, value);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+}
+
+it('resets even when an invalid edit preserves the last valid timeline', () => {
+  act(() => root.render(createElement(Simulator)));
+  act(() => container.querySelector<HTMLButtonElement>('button[aria-label="Reproduzir simulação"]')!.click());
+  elapse(1000);
+  const seek = container.querySelector<HTMLInputElement>('input[type="range"]')!;
+  expect(seek.value).toBe('0');
+  changeInput(container.querySelector<HTMLInputElement>('.params input')!, 'invalid');
+  expect(container.querySelector('[role="alert"]')).not.toBeNull();
+  expect(seek.value).toBe('-1');
+  expect(vi.getTimerCount()).toBe(0);
 });
