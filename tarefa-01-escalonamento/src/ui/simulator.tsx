@@ -13,7 +13,13 @@ import {
   type FormValues,
   type ProcessRow,
 } from './input_model';
+import { PlaybackControls } from './playback_controls';
+import { usePlayback } from './playback_model';
+export type { PlaybackState } from './playback_contract';
+// TODO: import { AnimatedStage } from './scene_canvas';
+
 import { MetricsPanel } from './metrics_panel';
+import { AnimatedStage } from './scene_canvas';
 import { ProcessEditor } from './process_editor';
 import { TextImport } from './text_import';
 import { TimeDiagram } from './time_diagram';
@@ -42,8 +48,15 @@ export function Simulator() {
   const [lastValid, setLastValid] = useState<Success | null>(null);
   const [selected, setSelected] = useState(0);
   const selectId = useId();
+  const result = lastValid?.results[selected];
+  const playback = usePlayback(result?.timeline.length ?? 0);
+  const selectAlgorithm = (index: number): void => {
+    playback.reset();
+    setSelected(index);
+  };
 
   const commit = (next: FormValues) => {
+    playback.reset();
     const outcome = evaluate(next);
     setValues(next);
     setEvaluation(outcome);
@@ -54,8 +67,6 @@ export function Simulator() {
   useEffect(() => commit(EXAMPLE), []);
 
   const setRows = (rows: readonly ProcessRow[]) => commit({ ...values, rows });
-  const result = lastValid?.results[selected];
-
   return (
     <main id="simulador" className="page">
       <header>
@@ -95,7 +106,7 @@ export function Simulator() {
             <h2 id="algorithm-title">Algoritmo</h2>
             <label htmlFor={selectId} className="visually-hidden">Algoritmo</label>
             <select id={selectId} value={selected}
-              onChange={(event) => setSelected(Number(event.target.value))}>
+              onChange={(event) => selectAlgorithm(Number(event.target.value))}>
               {ALGORITHMS.map((name, index) => (
                 <option key={name} value={index}>{name}</option>
               ))}
@@ -109,12 +120,19 @@ export function Simulator() {
 
           <section aria-labelledby="diagram-title">
             <h2 id="diagram-title">Diagrama de tempo</h2>
-            <TimeDiagram timeline={result.timeline} processCount={lastValid.processCount} />
+            <AnimatedStage
+              result={result}
+              processCount={lastValid.processCount}
+              playback={playback}
+            />
+            <PlaybackControls playback={playback} timelineLength={result.timeline.length} />
+            <TimeDiagram timeline={result.timeline} processCount={lastValid.processCount}
+              currentInstant={playback.currentInstant} />
           </section>
 
           <section aria-labelledby="comparison-title">
             <h2 id="comparison-title">Comparação</h2>
-            <ComparisonTable results={lastValid.results} selected={selected} onSelect={setSelected} />
+            <ComparisonTable results={lastValid.results} selected={selected} onSelect={selectAlgorithm} />
           </section>
         </div>
       )}
