@@ -178,14 +178,64 @@ th, td { padding: 0.35rem 0.4rem; text-align: left; }
   .params { max-width: 24rem; }
 }
 
-/* Vídeo dos algoritmos: o clipe tem fundo escuro próprio, então a moldura
-   só precisa dar borda e cantos, sem pintar o fundo por baixo. */
+/* ---------- abertura ---------- */
+/* O vídeo abre a página, então o bloco inteiro adota o fundo escuro dele
+   em vez de ficar como um cartão claro em volta de um retângulo escuro. */
+.intro {
+  background: #0e1525;
+  color: #ececec;
+  padding: clamp(2rem, 6vw, 4rem) 1rem clamp(2rem, 5vw, 3rem);
+}
+
+.intro-inner {
+  max-width: 56rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.intro .eyebrow {
+  margin: 0 0 0.75rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #9aa3b2;
+}
+
+.intro h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 5.5vw, 3rem);
+  line-height: 1.1;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
+
+.intro-lead {
+  max-width: 34rem;
+  margin: 1rem auto clamp(1.5rem, 4vw, 2.25rem);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #c3c9d4;
+}
+
 .algorithm-video {
   display: block;
   width: 100%;
-  border: 1px solid var(--border);
+  border: 1px solid #26324a;
   border-radius: 0.6rem;
   background: #0e1525;
+}
+
+.intro-skip {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #9ab4ff;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.intro-skip:hover {
+  border-bottom-color: #9ab4ff;
 }
 
 /* Palco animado: altura fluida, com piso para não achatar com muitos
