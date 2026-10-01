@@ -1,0 +1,976 @@
+{
+  "processos": [
+    {
+      "id": 1,
+      "criacao": 0,
+      "duracao": 5,
+      "prioridade": 2
+    },
+    {
+      "id": 2,
+      "criacao": 0,
+      "duracao": 2,
+      "prioridade": 3
+    },
+    {
+      "id": 3,
+      "criacao": 1,
+      "duracao": 4,
+      "prioridade": 1
+    },
+    {
+      "id": 4,
+      "criacao": 3,
+      "duracao": 3,
+      "prioridade": 4
+    }
+  ],
+  "config": {
+    "quantum": 2,
+    "aging": 1
+  },
+  "cenas": [
+    {
+      "algoritmo": "FCFS (First Come, First Served)",
+      "linhaDoTempo": [
+        {
+          "instante": 0,
+          "executando": 1,
+          "prontos": [
+            2
+          ]
+        },
+        {
+          "instante": 1,
+          "executando": 1,
+          "prontos": [
+            2,
+            3
+          ]
+        },
+        {
+          "instante": 2,
+          "executando": 1,
+          "prontos": [
+            2,
+            3
+          ]
+        },
+        {
+          "instante": 3,
+          "executando": 1,
+          "prontos": [
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "instante": 4,
+          "executando": 1,
+          "prontos": [
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "instante": 5,
+          "executando": 2,
+          "prontos": [
+            3,
+            4
+          ]
+        },
+        {
+          "instante": 6,
+          "executando": 2,
+          "prontos": [
+            3,
+            4
+          ]
+        },
+        {
+          "instante": 7,
+          "executando": 3,
+          "prontos": [
+            4
+          ]
+        },
+        {
+          "instante": 8,
+          "executando": 3,
+          "prontos": [
+            4
+          ]
+        },
+        {
+          "instante": 9,
+          "executando": 3,
+          "prontos": [
+            4
+          ]
+        },
+        {
+          "instante": 10,
+          "executando": 3,
+          "prontos": [
+            4
+          ]
+        },
+        {
+          "instante": 11,
+          "executando": 4,
+          "prontos": []
+        },
+        {
+          "instante": 12,
+          "executando": 4,
+          "prontos": []
+        },
+        {
+          "instante": 13,
+          "executando": 4,
+          "prontos": []
+        }
+      ],
+      "porProcesso": [
+        {
+          "id": 1,
+          "turnaround": 5,
+          "espera": 0,
+          "resposta": 0
+        },
+        {
+          "id": 2,
+          "turnaround": 7,
+          "espera": 5,
+          "resposta": 5
+        },
+        {
+          "id": 3,
+          "turnaround": 10,
+          "espera": 6,
+          "resposta": 6
+        },
+        {
+          "id": 4,
+          "turnaround": 11,
+          "espera": 8,
+          "resposta": 8
+        }
+      ],
+      "turnaroundMedio": 8.25,
+      "esperaMedia": 4.75,
+      "trocasDeContexto": 3
+    },
+    {
+      "algoritmo": "SJF (Shortest Job First)",
+      "linhaDoTempo": [
+        {
+          "instante": 0,
+          "executando": 2,
+          "prontos": [
+            1
+          ]
+        },
+        {
+          "instante": 1,
+          "executando": 2,
+          "prontos": [
+            1,
+            3
+          ]
+        },
+        {
+          "instante": 2,
+          "executando": 3,
+          "prontos": [
+            1
+          ]
+        },
+        {
+          "instante": 3,
+          "executando": 3,
+          "prontos": [
+            1,
+            4
+          ]
+        },
+        {
+          "instante": 4,
+          "executando": 3,
+          "prontos": [
+            1,
+            4
+          ]
+        },
+        {
+          "instante": 5,
+          "executando": 3,
+          "prontos": [
+            1,
+            4
+          ]
+        },
+        {
+          "instante": 6,
+          "executando": 4,
+          "prontos": [
+            1
+          ]
+        },
+        {
+          "instante": 7,
+          "executando": 4,
+          "prontos": [
+            1
+          ]
+        },
+        {
+          "instante": 8,
+          "executando": 4,
+          "prontos": [
+            1
+          ]
+        },
+        {
+          "instante": 9,
+          "executando": 1,
+          "prontos": []
+        },
+        {
+          "instante": 10,
+          "executando": 1,
+          "prontos": []
+        },
+        {
+          "instante": 11,
+          "executando": 1,
+          "prontos": []
+        },
+        {
+          "instante": 12,
+          "executando": 1,
+          "prontos": []
+        },
+        {
+          "instante": 13,
+          "executando": 1,
+          "prontos": []
+        }
+      ],
+      "porProcesso": [
+        {
+          "id": 1,
+          "turnaround": 14,
+          "espera": 9,
+          "resposta": 9
+        },
+        {
+          "id": 2,
+          "turnaround": 2,
+          "espera": 0,
+          "resposta": 0
+        },
+        {
+          "id": 3,
+          "turnaround": 5,
+          "espera": 1,
+          "resposta": 1
+        },
+        {
+          "id": 4,
+          "turnaround": 6,
+          "espera": 3,
+          "resposta": 3
+        }
+      ],
+      "turnaroundMedio": 6.75,
+      "esperaMedia": 3.25,
+      "trocasDeContexto": 3
+    },
+    {
+      "algoritmo": "SRTF (Shortest Remaining Time First)",
+      "linhaDoTempo": [
+        {
+          "instante": 0,
+          "executando": 2,
+          "prontos": [
+            1
+          ]
+        },
+        {
+          "instante": 1,
+          "executando": 2,
+          "prontos": [
+            1,
+            3
+          ]
+        },
+        {
+          "instante": 2,
+          "executando": 3,
+          "prontos": [
+            1
+          ]
+        },
+        {
+          "instante": 3,
+          "executando": 3,
+          "prontos": [
+            1,
+            4
+          ]
+        },
+        {
+          "instante": 4,
+          "executando": 3,
+          "prontos": [
+            1,
+            4
+          ]
+        },
+        {
+          "instante": 5,
+          "executando": 3,
+          "prontos": [
+            1,
+            4
+          ]
+        },
+        {
+          "instante": 6,
+          "executando": 4,
+          "prontos": [
+            1
+          ]
+        },
+        {
+          "instante": 7,
+          "executando": 4,
+          "prontos": [
+            1
+          ]
+        },
+        {
+          "instante": 8,
+          "executando": 4,
+          "prontos": [
+            1
+          ]
+        },
+        {
+          "instante": 9,
+          "executando": 1,
+          "prontos": []
+        },
+        {
+          "instante": 10,
+          "executando": 1,
+          "prontos": []
+        },
+        {
+          "instante": 11,
+          "executando": 1,
+          "prontos": []
+        },
+        {
+          "instante": 12,
+          "executando": 1,
+          "prontos": []
+        },
+        {
+          "instante": 13,
+          "executando": 1,
+          "prontos": []
+        }
+      ],
+      "porProcesso": [
+        {
+          "id": 1,
+          "turnaround": 14,
+          "espera": 9,
+          "resposta": 9
+        },
+        {
+          "id": 2,
+          "turnaround": 2,
+          "espera": 0,
+          "resposta": 0
+        },
+        {
+          "id": 3,
+          "turnaround": 5,
+          "espera": 1,
+          "resposta": 1
+        },
+        {
+          "id": 4,
+          "turnaround": 6,
+          "espera": 3,
+          "resposta": 3
+        }
+      ],
+      "turnaroundMedio": 6.75,
+      "esperaMedia": 3.25,
+      "trocasDeContexto": 3
+    },
+    {
+      "algoritmo": "Priority (non-preemptive)",
+      "linhaDoTempo": [
+        {
+          "instante": 0,
+          "executando": 1,
+          "prontos": [
+            2
+          ]
+        },
+        {
+          "instante": 1,
+          "executando": 1,
+          "prontos": [
+            2,
+            3
+          ]
+        },
+        {
+          "instante": 2,
+          "executando": 1,
+          "prontos": [
+            2,
+            3
+          ]
+        },
+        {
+          "instante": 3,
+          "executando": 1,
+          "prontos": [
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "instante": 4,
+          "executando": 1,
+          "prontos": [
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "instante": 5,
+          "executando": 3,
+          "prontos": [
+            2,
+            4
+          ]
+        },
+        {
+          "instante": 6,
+          "executando": 3,
+          "prontos": [
+            2,
+            4
+          ]
+        },
+        {
+          "instante": 7,
+          "executando": 3,
+          "prontos": [
+            2,
+            4
+          ]
+        },
+        {
+          "instante": 8,
+          "executando": 3,
+          "prontos": [
+            2,
+            4
+          ]
+        },
+        {
+          "instante": 9,
+          "executando": 2,
+          "prontos": [
+            4
+          ]
+        },
+        {
+          "instante": 10,
+          "executando": 2,
+          "prontos": [
+            4
+          ]
+        },
+        {
+          "instante": 11,
+          "executando": 4,
+          "prontos": []
+        },
+        {
+          "instante": 12,
+          "executando": 4,
+          "prontos": []
+        },
+        {
+          "instante": 13,
+          "executando": 4,
+          "prontos": []
+        }
+      ],
+      "porProcesso": [
+        {
+          "id": 1,
+          "turnaround": 5,
+          "espera": 0,
+          "resposta": 0
+        },
+        {
+          "id": 2,
+          "turnaround": 11,
+          "espera": 9,
+          "resposta": 9
+        },
+        {
+          "id": 3,
+          "turnaround": 8,
+          "espera": 4,
+          "resposta": 4
+        },
+        {
+          "id": 4,
+          "turnaround": 11,
+          "espera": 8,
+          "resposta": 8
+        }
+      ],
+      "turnaroundMedio": 8.75,
+      "esperaMedia": 5.25,
+      "trocasDeContexto": 3
+    },
+    {
+      "algoritmo": "Priority (preemptive)",
+      "linhaDoTempo": [
+        {
+          "instante": 0,
+          "executando": 1,
+          "prontos": [
+            2
+          ]
+        },
+        {
+          "instante": 1,
+          "executando": 3,
+          "prontos": [
+            1,
+            2
+          ]
+        },
+        {
+          "instante": 2,
+          "executando": 3,
+          "prontos": [
+            1,
+            2
+          ]
+        },
+        {
+          "instante": 3,
+          "executando": 3,
+          "prontos": [
+            1,
+            2,
+            4
+          ]
+        },
+        {
+          "instante": 4,
+          "executando": 3,
+          "prontos": [
+            1,
+            2,
+            4
+          ]
+        },
+        {
+          "instante": 5,
+          "executando": 1,
+          "prontos": [
+            2,
+            4
+          ]
+        },
+        {
+          "instante": 6,
+          "executando": 1,
+          "prontos": [
+            2,
+            4
+          ]
+        },
+        {
+          "instante": 7,
+          "executando": 1,
+          "prontos": [
+            2,
+            4
+          ]
+        },
+        {
+          "instante": 8,
+          "executando": 1,
+          "prontos": [
+            2,
+            4
+          ]
+        },
+        {
+          "instante": 9,
+          "executando": 2,
+          "prontos": [
+            4
+          ]
+        },
+        {
+          "instante": 10,
+          "executando": 2,
+          "prontos": [
+            4
+          ]
+        },
+        {
+          "instante": 11,
+          "executando": 4,
+          "prontos": []
+        },
+        {
+          "instante": 12,
+          "executando": 4,
+          "prontos": []
+        },
+        {
+          "instante": 13,
+          "executando": 4,
+          "prontos": []
+        }
+      ],
+      "porProcesso": [
+        {
+          "id": 1,
+          "turnaround": 9,
+          "espera": 4,
+          "resposta": 0
+        },
+        {
+          "id": 2,
+          "turnaround": 11,
+          "espera": 9,
+          "resposta": 9
+        },
+        {
+          "id": 3,
+          "turnaround": 4,
+          "espera": 0,
+          "resposta": 0
+        },
+        {
+          "id": 4,
+          "turnaround": 11,
+          "espera": 8,
+          "resposta": 8
+        }
+      ],
+      "turnaroundMedio": 8.75,
+      "esperaMedia": 5.25,
+      "trocasDeContexto": 4
+    },
+    {
+      "algoritmo": "Round-Robin with quantum, without priority",
+      "linhaDoTempo": [
+        {
+          "instante": 0,
+          "executando": 1,
+          "prontos": [
+            2
+          ]
+        },
+        {
+          "instante": 1,
+          "executando": 1,
+          "prontos": [
+            2,
+            3
+          ]
+        },
+        {
+          "instante": 2,
+          "executando": 2,
+          "prontos": [
+            1,
+            3
+          ]
+        },
+        {
+          "instante": 3,
+          "executando": 2,
+          "prontos": [
+            1,
+            3,
+            4
+          ]
+        },
+        {
+          "instante": 4,
+          "executando": 3,
+          "prontos": [
+            1,
+            4
+          ]
+        },
+        {
+          "instante": 5,
+          "executando": 3,
+          "prontos": [
+            1,
+            4
+          ]
+        },
+        {
+          "instante": 6,
+          "executando": 1,
+          "prontos": [
+            3,
+            4
+          ]
+        },
+        {
+          "instante": 7,
+          "executando": 1,
+          "prontos": [
+            3,
+            4
+          ]
+        },
+        {
+          "instante": 8,
+          "executando": 4,
+          "prontos": [
+            1,
+            3
+          ]
+        },
+        {
+          "instante": 9,
+          "executando": 4,
+          "prontos": [
+            1,
+            3
+          ]
+        },
+        {
+          "instante": 10,
+          "executando": 3,
+          "prontos": [
+            1,
+            4
+          ]
+        },
+        {
+          "instante": 11,
+          "executando": 3,
+          "prontos": [
+            1,
+            4
+          ]
+        },
+        {
+          "instante": 12,
+          "executando": 1,
+          "prontos": [
+            4
+          ]
+        },
+        {
+          "instante": 13,
+          "executando": 4,
+          "prontos": []
+        }
+      ],
+      "porProcesso": [
+        {
+          "id": 1,
+          "turnaround": 13,
+          "espera": 8,
+          "resposta": 0
+        },
+        {
+          "id": 2,
+          "turnaround": 4,
+          "espera": 2,
+          "resposta": 2
+        },
+        {
+          "id": 3,
+          "turnaround": 11,
+          "espera": 7,
+          "resposta": 3
+        },
+        {
+          "id": 4,
+          "turnaround": 11,
+          "espera": 8,
+          "resposta": 5
+        }
+      ],
+      "turnaroundMedio": 9.75,
+      "esperaMedia": 6.25,
+      "trocasDeContexto": 7
+    },
+    {
+      "algoritmo": "Round-Robin with priority and aging",
+      "linhaDoTempo": [
+        {
+          "instante": 0,
+          "executando": 1,
+          "prontos": [
+            2
+          ]
+        },
+        {
+          "instante": 1,
+          "executando": 1,
+          "prontos": [
+            2,
+            3
+          ]
+        },
+        {
+          "instante": 2,
+          "executando": 3,
+          "prontos": [
+            1,
+            2
+          ]
+        },
+        {
+          "instante": 3,
+          "executando": 3,
+          "prontos": [
+            1,
+            2,
+            4
+          ]
+        },
+        {
+          "instante": 4,
+          "executando": 2,
+          "prontos": [
+            1,
+            3,
+            4
+          ]
+        },
+        {
+          "instante": 5,
+          "executando": 2,
+          "prontos": [
+            1,
+            3,
+            4
+          ]
+        },
+        {
+          "instante": 6,
+          "executando": 1,
+          "prontos": [
+            3,
+            4
+          ]
+        },
+        {
+          "instante": 7,
+          "executando": 1,
+          "prontos": [
+            3,
+            4
+          ]
+        },
+        {
+          "instante": 8,
+          "executando": 3,
+          "prontos": [
+            1,
+            4
+          ]
+        },
+        {
+          "instante": 9,
+          "executando": 3,
+          "prontos": [
+            1,
+            4
+          ]
+        },
+        {
+          "instante": 10,
+          "executando": 4,
+          "prontos": [
+            1
+          ]
+        },
+        {
+          "instante": 11,
+          "executando": 4,
+          "prontos": [
+            1
+          ]
+        },
+        {
+          "instante": 12,
+          "executando": 1,
+          "prontos": [
+            4
+          ]
+        },
+        {
+          "instante": 13,
+          "executando": 4,
+          "prontos": []
+        }
+      ],
+      "porProcesso": [
+        {
+          "id": 1,
+          "turnaround": 13,
+          "espera": 8,
+          "resposta": 0
+        },
+        {
+          "id": 2,
+          "turnaround": 6,
+          "espera": 4,
+          "resposta": 4
+        },
+        {
+          "id": 3,
+          "turnaround": 9,
+          "espera": 5,
+          "resposta": 1
+        },
+        {
+          "id": 4,
+          "turnaround": 11,
+          "espera": 8,
+          "resposta": 7
+        }
+      ],
+      "turnaroundMedio": 9.75,
+      "esperaMedia": 6.25,
+      "trocasDeContexto": 7
+    }
+  ]
+}
