@@ -27,6 +27,9 @@ export function resetPlayback(speed: number = 1): PlaybackState {
 }
 
 export function seekPlayback(state: PlaybackState, instant: number, length: number): PlaybackState {
+  if (!Number.isFinite(instant)) {
+    throw new RangeError(`Received instant ${instant}; expected a finite number.`);
+  }
   const currentInstant = clampInstant(Math.floor(instant), length);
   return {
     ...state,
@@ -69,7 +72,6 @@ function usePlaybackCommands(length: number, setState: StateSetter): PlaybackCom
   const toggle = useCallback(() => setState((state) => state.isPlaying
     ? { ...state, isPlaying: false } : startPlayback(state, length)), [length, setState]);
   const seek = useCallback((instant: number) => {
-    if (!Number.isFinite(instant)) throw new RangeError(`Received instant ${instant}; expected a finite number.`);
     setState((state) => seekPlayback(state, instant, length));
   }, [length, setState]);
   const setSpeed = useCallback((speed: number) => {
