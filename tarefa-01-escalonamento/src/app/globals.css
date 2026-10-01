@@ -177,3 +177,13 @@ th, td { padding: 0.35rem 0.4rem; text-align: left; }
   h1 { font-size: 1.9rem; }
   .params { max-width: 24rem; }
 }
+
+/* Vídeo dos algoritmos: o clipe tem fundo escuro próprio, então a moldura
+   só precisa dar borda e cantos, sem pintar o fundo por baixo. */
+.algorithm-video {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  background: #0e1525;
+}
