@@ -37,3 +37,10 @@ Thumbs.db
 
 # Relatórios de teste
 .vitest/
+
+# Renders intermediários do Manim (o vídeo final vai em public/video/)
+media/
+
+# Python
+__pycache__/
+*.pyc

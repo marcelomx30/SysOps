@@ -10,7 +10,9 @@
     "lint": "next lint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "cli": "tsx src/cli/main.ts"
+    "cli": "tsx src/cli/main.ts",
+    "video:dados": "tsx video/exportar.ts",
+    "video:render": "uv run --python 3.12 --with manim manim -qh --disable_caching video/cena.py Escalonamento"
   },
   "dependencies": {
     "next": "16.3.5",
