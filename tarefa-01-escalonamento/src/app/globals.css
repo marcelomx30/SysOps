@@ -187,3 +187,26 @@ th, td { padding: 0.35rem 0.4rem; text-align: left; }
   border-radius: 0.6rem;
   background: #0e1525;
 }
+
+/* Palco animado: altura fluida, com piso para não achatar com muitos
+   processos. O canvas pinta o próprio fundo, por isso não há background aqui. */
+.stage { margin-top: 1rem; }
+.stage-canvas {
+  display: block;
+  width: 100%;
+  height: clamp(9rem, 28vh, 16rem);
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+}
+
+/* Playback keeps future slices visible so the entire schedule remains readable. */
+.diagram .playback-future { opacity: 0.25; }
+.diagram .playback-current { outline: 2px solid var(--accent); outline-offset: 0; }
+.diagram th.playback-current { color: var(--text); font-weight: 700; }
+.playback-controls, .playback-speeds, .playback-seek { display: flex; align-items: center; gap: 0.5rem; }
+.playback-controls { flex-wrap: wrap; margin-bottom: 1rem; }
+.playback-seek { flex: 1 1 14rem; }
+.playback-seek input { flex: 1; padding: 0; accent-color: var(--accent); }
+.playback-time { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.playback-controls button[aria-pressed='true'] { background: var(--accent); color: var(--accent-text); }
+.playback-controls button:disabled { cursor: default; opacity: 0.45; }
