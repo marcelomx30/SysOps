@@ -95,21 +95,98 @@ cada fatia de tempo: quando o quantum se esgota ou, antes disso, quando o proces
 
 ## Como rodar
 
+### 1. Pré-requisitos
+
+- [Node.js](https://nodejs.org/) **22.12 ou mais novo** (confira com `node --version`)
+- Git
+
+### 2. Baixar e instalar (só na primeira vez)
+
 ```bash
-npm install     # instala as dependências
-npm test        # roda a suíte de testes
-npm run dev     # sobe a interface web em http://localhost:3000
-npm run build   # build de produção
+git clone https://github.com/marcelomx30/SysOps.git
+cd SysOps/tarefa-01-escalonamento
+npm install
 ```
 
-### CLI (stdin → stdout)
+**Todos os comandos a partir daqui rodam dentro da pasta `tarefa-01-escalonamento/`.**
+Na raiz do repositório não há `package.json`, e o `npm` dá erro.
+
+### 3. Rodar o simulador (CLI: stdin → stdout)
+
+Linux, macOS, Git Bash ou Prompt de Comando (`cmd`) do Windows:
 
 ```bash
 npm run cli -- --config exemplos/config.txt < exemplos/entrada-exemplo.txt
 ```
 
-Sem `--config`, valem os padrões `quantum:2` e `aging:1`. O CLI imprime, para cada
-algoritmo registrado no motor, as quatro informações exigidas pelo enunciado.
+PowerShell do Windows (o PowerShell não aceita o `<`):
+
+```powershell
+Get-Content exemplos\entrada-exemplo.txt | npx tsx src/cli/main.ts --config exemplos/config.txt
+```
+
+| Parte do comando | O que é |
+|---|---|
+| `npm run cli` | executa o simulador (`src/cli/main.ts`) |
+| `--` | separa as opções do `npm` das opções do simulador |
+| `--config exemplos/config.txt` | arquivo de configuração com o **quantum** e o **aging** |
+| `< exemplos/entrada-exemplo.txt` | manda o arquivo de **processos** para a entrada padrão (stdin) |
+
+O simulador roda a mesma entrada nos **7 algoritmos** e imprime, para cada um: tempo
+médio de vida (tt), tempo médio de espera (tw), número de trocas de contexto e o
+diagrama de tempo. Trecho da saída:
+
+```
+=== Round-Robin with quantum, without priority ===
+tempo médio de vida (tt):   9.75
+tempo médio de espera (tw): 6.25
+trocas de contexto:         7
+
+tempo  P1 P2 P3 P4
+ 0- 1  ## --
+ 1- 2  ## -- --
+ 2- 3  -- ## --
+...
+```
+
+### 4. Rodar com outra entrada
+
+Os dois arquivos são texto puro e podem ser editados ou trocados:
+
+- **Processos** (`exemplos/entrada-exemplo.txt`): um processo por linha, com
+  `<instante de criação> <duração> <prioridade>`. A primeira linha é P1, a segunda P2 e
+  assim por diante.
+- **Configuração** (`exemplos/config.txt`): `quantum:<n>` e `aging:<n>`, um por linha.
+  Sem `--config`, valem `quantum:2` e `aging:1`.
+
+Para testar uma entrada rápida sem criar arquivo (Linux, macOS ou Git Bash):
+
+```bash
+printf '0 5 2\n0 2 3\n1 4 1\n3 3 4\n' | npm run cli -- --config exemplos/config.txt
+```
+
+Uma entrada inválida (por exemplo, uma letra no lugar de um número) mostra qual linha
+está errada e termina com código de saída 1.
+
+### 5. Interface web
+
+- Online: https://sysops-escalonamento.vercel.app
+- Local: `npm run dev` e abrir http://localhost:3000
+
+### 6. Testes
+
+```bash
+npm test
+```
+
+### Problemas comuns
+
+| Sintoma | Causa e solução |
+|---|---|
+| `npm error ... package.json` | o comando foi rodado na raiz do repositório. Entre em `tarefa-01-escalonamento/` |
+| `tsx: not found` ou `Cannot find module` | faltou o `npm install` dentro de `tarefa-01-escalonamento/` |
+| `Entrada padrão vazia` | faltou o `< exemplos/entrada-exemplo.txt` no fim do comando |
+| PowerShell reclama do operador `<` | use o comando do PowerShell da seção 3 |
 
 ## Estado da implementação
 
